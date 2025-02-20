@@ -52,9 +52,8 @@ public class ValeriaUnification {
         var excessPower = leftExcess + pivotPower;
 
         if (excessPower == partitionSize) {
-            // NOTE: If we were to change the assumption that there is no exact partitioning
-            // point,
-            // you can probably change this to >=
+            // NOTE: If we were to change the assumption that there is no exact
+            // partitioning point, you can probably change this to >=
 
             // I found a partition point
             // arr[pivotInd] is the last element (inclusive) in the partition
