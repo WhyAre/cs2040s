@@ -40,14 +40,10 @@ class TreeNode<T extends Comparable<T>> {
     private TreeNode<T> parent;
     private int height;
 
-    private T key;
+    private final T key;
 
     TreeNode(T key) {
-        left = null;
-        right = null;
-        height = 0;
-        parent = null;
-        this.key = key;
+        this(null, null, null, 0, key);
     }
 
     TreeNode(TreeNode<T> left, TreeNode<T> right, TreeNode<T> parent, int height, T key) {
