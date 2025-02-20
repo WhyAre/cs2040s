@@ -16,7 +16,8 @@ public class ValeriaUnification {
     }
 
     /**
-     * Finds all the partitions from [start, end) and returns the excess power level.
+     * Finds all the partitions from [start, end) and returns the excess power
+     * level.
      *
      * @param arr             original array
      * @param start           start index (inclusive) of the subarray
@@ -27,7 +28,7 @@ public class ValeriaUnification {
      * @return excess power
      */
     static int findPartitions(Pair[] arr, int start, int end, int partitionSize,
-                              int additionalPower, ArrayList<Integer> output) {
+            int additionalPower, ArrayList<Integer> output) {
         if (start >= end) {
             // Case where there are zero items
             return additionalPower;
@@ -51,7 +52,8 @@ public class ValeriaUnification {
         var excessPower = leftExcess + pivotPower;
 
         if (excessPower == partitionSize) {
-            // NOTE: If we were to change the assumption that there is no exact partitioning point,
+            // NOTE: If we were to change the assumption that there is no exact partitioning
+            // point,
             // you can probably change this to >=
 
             // I found a partition point
@@ -92,23 +94,7 @@ public class ValeriaUnification {
     }
 
     public static void main(String[] args) {
-//        var tc = new Pair[]{
-//                new Pair(3, 1000),
-//                new Pair(1, 2000),
-//                new Pair(2, 1000),
-//                new Pair(4, 1500),
-//                new Pair(5, 500)
-//        };
-//
-//        var tc1 = new Pair[]{
-//                new Pair(3, 150_000),
-//                new Pair(4, 42_000),
-//                new Pair(1, 1_000),
-//                new Pair(8, 151_000),
-//                new Pair(7, 109_000)
-//        };
-
-        var tc = new Pair[]{
+        var tc = new Pair[] {
                 new Pair(4, 750),
                 new Pair(1, 2000),
                 new Pair(3, 250),
