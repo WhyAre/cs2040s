@@ -1,13 +1,13 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ValeriaUnification {
 
-    static void debugPrint(Pair[] arr, int pivotInd, int start, int end) {
-        System.out.printf("Pivot: %d, Start: %d, Stop: %d\n", pivotInd, start, end);
+    static void debugPrintArr(Pair[] arr, int pivotInd, int start, int end, int additionalPower) {
+        System.out.printf("Pivot: %d, Start: %d, Stop: %d, Additional Power: %d\n", pivotInd,
+                start, end, additionalPower);
 
         var arrStr = Arrays.stream(arr)
                 .map(Pair::toString)
@@ -16,45 +16,62 @@ public class ValeriaUnification {
     }
 
     /**
-     * Finds all the partitions from [start, end) and returns the excess weights after inserting all the partition points.
+     * Finds all the partitions from [start, end) and returns the excess power level.
      *
-     * @return excess weight
+     * @param arr             original array
+     * @param start           start index (inclusive) of the subarray
+     * @param end             end index (exclusive of the subarray
+     * @param partitionSize   size of each partition
+     * @param additionalPower additional power
+     * @param output          array list of partition points
+     * @return excess power
      */
     static int findPartitions(Pair[] arr, int start, int end, int partitionSize,
-                              int additionalWeight, ArrayList<Integer> output) {
+                              int additionalPower, ArrayList<Integer> output) {
         if (start >= end) {
             // Case where there are zero items
-            return additionalWeight;
+            return additionalPower;
         }
 
         int pivotInd = Utils.partition(arr, start, end);
 
-        debugPrint(arr, pivotInd, start, end);
+        debugPrintArr(arr, pivotInd, start, end, additionalPower);
 
-        var leftSum = additionalWeight + IntStream.range(start, pivotInd)
-                .map(ind -> arr[ind].weight())
+        var leftSum = additionalPower + IntStream.range(start, pivotInd)
+                .map(ind -> arr[ind].power())
                 .sum();
 
         // Go left if there could be partitions there
         var leftExcess = (partitionSize <= leftSum)
-                ? findPartitions(arr, start, pivotInd, partitionSize, additionalWeight, output)
+                ? findPartitions(arr, start, pivotInd, partitionSize, additionalPower, output)
                 : leftSum;
 
-        var pivotWeight = arr[pivotInd].weight();
+        var pivotPower = arr[pivotInd].power();
 
-        var excessWeight = leftExcess + pivotWeight;
-        System.out.printf("Excess Weight: %d\n", excessWeight);
-        if (excessWeight >= partitionSize) {
-            System.out.printf("Added pivot: %d\n", pivotInd);
-            if (pivotInd + 1 < arr.length) output.add(arr[pivotInd + 1].id());
-            excessWeight -= partitionSize;
+        var excessPower = leftExcess + pivotPower;
+
+        if (excessPower == partitionSize) {
+            // NOTE: If we were to change the assumption that there is no exact partitioning point,
+            // you can probably change this to >=
+
+            // I found a partition point
+            // arr[pivotInd] is the last element (inclusive) in the partition
+            System.out.printf("Found partition point at index %d\n", pivotInd);
+
+            if (pivotInd + 1 < arr.length) {
+                // Adds the next element after the pivotInd to represent the
+                // first element (inclusive) of the next partition.
+                output.add(arr[pivotInd + 1].id());
+            }
+
+            excessPower = 0;
         }
 
-        return findPartitions(arr, pivotInd + 1, end, partitionSize, excessWeight, output);
+        return findPartitions(arr, pivotInd + 1, end, partitionSize, excessPower, output);
     }
 
     static void solve(Pair[] arr, int numPartitions) {
-        var sumOfWeights = Arrays.stream(arr).mapToInt(Pair::weight).sum();
+        var sumOfWeights = Arrays.stream(arr).mapToInt(Pair::power).sum();
         var partitionSize = sumOfWeights / numPartitions;
         System.out.printf("Partition Size: %d\n", partitionSize);
 
@@ -103,8 +120,7 @@ public class ValeriaUnification {
         solve(tc, 3);
     }
 
-    record Pair(int id, int weight) {
+    record Pair(int id, int power) {
     }
 
 }
-
